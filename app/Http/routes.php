@@ -19,3 +19,9 @@ Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
 ]);
+
+
+$router->post('api/login', 'Api\AuthController@postLogin');
+$router->post('api/forgotPassword', 'Api\AuthController@postForgotPassword');
+$router->post('api/login', 'Api\AuthController@postLogin');
+$router->post('api/login', 'Api\AuthController@postLogin');

@@ -6,4 +6,14 @@ abstract class Request extends FormRequest {
 
 	//
 
+    public function authorize()
+    {
+        return false;
+    }
+
+    public function forbiddenResponse()
+    {
+        return response(json_encode(['message' => 'Unauthorized']), 403);
+    }
+
 }
