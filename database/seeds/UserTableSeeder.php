@@ -14,16 +14,7 @@ class UserTableSeeder extends Seeder
         // TestDummy::times(20)->create('App\Post');
 
         $faker = Faker\Factory::create();
-        $data = [
-            'phone' => '84261124',
-            'email' => 'nguyen.habaoduy@gmail.com',
-            'password' => bcrypt('000000'),
-            'first_name' => 'Duy',
-            'last_name'=> 'Nguyen',
-            'type' => 'customer',
-            'api_token' => $this->generateRandomString(45)
-        ];
-        User::create($data);
+        
 
         for($i = 0; $i < 10; $i++) {
             $data = [

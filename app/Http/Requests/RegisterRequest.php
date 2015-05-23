@@ -2,7 +2,7 @@
 
 use App\Http\Requests\Request;
 
-class LoginRequest extends Request {
+class RegisterRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -23,8 +23,12 @@ class LoginRequest extends Request {
 	{
 		return [
 			//
-            'phone' => 'required',
-            'password' => 'required'
+            'phone' => 'required|unique:user,phone',
+            'email' => 'required|unique:user,email',
+            'password' => 'required|confirmed',
+            'password_confirmation' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required'
 		];
 	}
 

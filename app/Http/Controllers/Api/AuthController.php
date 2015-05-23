@@ -5,27 +5,89 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\GeneralRequest;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\CPasswordRequest;
+use App\User;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\RegisterRequest;
 
 class AuthController extends Controller {
 
 	public function postLogin(LoginRequest $request) {
-
+        if (Auth::attempt(['phone' => $request->get('phone'), 'password' => $request->get('password')]))
+        {
+            return response(Auth::user());
+        }
+        return response(json_encode(['message' => 'Invalid credentials']), 400);
     }
 
-    public function postChangePassword(Request $request) {
 
+    public function postForgotPassword(ResetPasswordRequest $request) {
+        $user = User::where('phone', $request->get('phone'))->first();
+        return response(json_encode(['message' => 'Sent email to '.$user->email]));
     }
 
-    public function postForgotPassword(Request $request) {
-
+    public function postChangePassword(ChangePasswordRequest $request) {
+        if (!Hash::check($request->get('current_password'), $request->auth->password)){
+            return response(json_encode(['message' => 'Invalid current password']), 400);
+        }
+        $request->auth->password = bcrypt($request->get('password'));
+        $request->auth->save();
+        return response($request->auth);
     }
 
-    public function getCurrentUser(Request $request) {
 
+    /*
+     * Post to change user profile
+     */
+    public function changeProfile(GeneralRequest $request) {
+        $data = [];
+
+        if ($request->has('first_name')) {
+            $data['first_name'] = $request->get('first_name');
+        }
+
+        if ($request->has('last_name')) {
+            $data['last_name'] = $request->get('last_name');
+        }
+
+        if (count($data) > 0) {
+            $request->auth->update($data);
+        }
+        return response($request->auth);
     }
 
-    public function changeProfile(Request $request) {
-
+    public function getCurrentUser(GeneralRequest $request) {
+        return response($request->auth);
     }
+
+    public function postRegister(RegisterRequest $request) {
+        $user = new User();
+        $user->phone = $request->get('phone');
+        $user->password = bcrypt($request->get('password'));
+        $user->email = $request->get('email');
+        $user->first_name = $request->get('first_name');
+        $user->last_name = $request->get('last_name');
+        $user->type = $request->get('customer');
+        $user->is_blocked = 0;
+        $user->api_token = $this->generateRandomString(45);
+        $user->save();
+        return response($user);
+    }
+
+    function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
+
 
 }

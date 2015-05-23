@@ -10,18 +10,10 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+$router->post('/api/changePassword', 'Api\AuthController@postChangePassword');
 
-Route::get('/', 'WelcomeController@index');
-
-Route::get('home', 'HomeController@index');
-
-Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
-]);
-
-
-$router->post('api/login', 'Api\AuthController@postLogin');
-$router->post('api/forgotPassword', 'Api\AuthController@postForgotPassword');
-$router->post('api/login', 'Api\AuthController@postLogin');
-$router->post('api/login', 'Api\AuthController@postLogin');
+$router->post('/api/login', 'Api\AuthController@postLogin');
+$router->post('/api/forgotPassword', 'Api\AuthController@postForgotPassword');
+$router->post('/api/profile', 'Api\AuthController@changeProfile');
+$router->get('/api/currentUser', 'Api\AuthController@getCurrentUser');
+$router->post('/api/register', 'Api\AuthController@postRegister');

@@ -2,7 +2,7 @@
 
 use App\Http\Requests\Request;
 
-class LoginRequest extends Request {
+class ResetPasswordRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -23,8 +23,7 @@ class LoginRequest extends Request {
 	{
 		return [
 			//
-            'phone' => 'required',
-            'password' => 'required'
+            'phone' => 'required|exists:user,phone'
 		];
 	}
 

@@ -1,9 +1,9 @@
 <?php namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Request;
 use App\User;
 
-abstract class Request extends FormRequest {
+class ChangePasswordRequest extends Request {
 
     public $auth = null;
 
@@ -21,14 +21,18 @@ abstract class Request extends FormRequest {
         return false;
     }
 
-    public function forbiddenResponse()
-    {
-        return response(json_encode(['message' => 'Unauthorized']), 403);
-    }
-
-    public function response(array $errors)
-    {
-        return response(json_encode($errors), 422);
-    }
+	/**
+	 * Get the validation rules that apply to the request.
+	 *
+	 * @return array
+	 */
+	public function rules()
+	{
+		return [
+            'current_password'=> 'required',
+            'password' => 'required|confirmed',
+            'password_confirmation' => 'required'
+		];
+	}
 
 }
