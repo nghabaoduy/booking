@@ -17,3 +17,5 @@ $router->post('/api/forgotPassword', 'Api\AuthController@postForgotPassword');
 $router->post('/api/profile', 'Api\AuthController@changeProfile');
 $router->get('/api/currentUser', 'Api\AuthController@getCurrentUser');
 $router->post('/api/register', 'Api\AuthController@postRegister');
+
+$router->resource('/api/booking', 'Api\BookingController');
