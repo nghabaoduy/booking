@@ -9,7 +9,6 @@ abstract class Request extends FormRequest {
 
     public function authorize()
     {
-        dd($this->header('Authorization'));
         if ($this->header('Authorization') == "" || !$this->header('Authorization')) {
             return false;
         } else {
