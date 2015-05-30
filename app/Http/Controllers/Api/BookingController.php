@@ -19,7 +19,17 @@ class BookingController extends Controller {
 	public function index(GeneralRequest $request)
 	{
 		//
-        $data = Booking::with('foodOrders')->where('user_id', $request->auth->id)->get();
+        $data = Booking::with('foodOrders');
+        if ($request->has('is_paid')) {
+            $data = $data->where('is_paid', $request->get('is_paid'));
+        }
+        if ($request->has('is_rescheduled')) {
+            $data = $data->where('is_rescheduled', $request->get('is_rescheduled'));
+        }
+        if ($request->has('is_confirmed')) {
+            $data = $data->where('is_confirmed', $request->get('is_confirmed'));
+        }
+        $data = $data->where('user_id', $request->auth->id)->get();
         return response($data);
 	}
 
@@ -63,7 +73,8 @@ class BookingController extends Controller {
                 'booking_id' => $booking->id,
                 'name' => $food['name'],
                 'quantity' => $food['quantity'],
-                'total_price' => $food['total_price']
+                'total_price' => $food['total_price'],
+                'code' => $food['code']
             ];
             FoodOrder::create($foodData);
         }
