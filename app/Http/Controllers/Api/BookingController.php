@@ -29,7 +29,7 @@ class BookingController extends Controller {
         if ($request->has('is_confirmed')) {
             $data = $data->where('is_confirmed', $request->get('is_confirmed'));
         }
-        $data = $data->where('user_id', $request->auth->id)->get();
+        $data = $data->where('user_id', $request->auth->id)->orderBy('time_slot', 'DESC')->get();
         return response($data);
 	}
 
