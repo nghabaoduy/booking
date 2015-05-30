@@ -67,7 +67,8 @@ class BookingController extends Controller {
             ];
             FoodOrder::create($foodData);
         }
-        return response(null, 204);
+        $booking->foodOrders;
+        return response($booking, 200);
 	}
 
     function generateRandomString($length = 10) {
