@@ -67,6 +67,10 @@ class AuthController extends Controller {
     }
 
     public function getCurrentUser(GeneralRequest $request) {
+        $bookingList = Booking::where('user_id', $request->auth->id)->where('is_paid', false)->where('time_slot','<', Carbon::now())->get();
+        if (count($bookingList) >= intval(env('SCAM_BOOKING'))) {
+            return response(json_encode(['message' => 'Account has been ban due to multiple scam booking. Please contact our manager for more information.']), 400);
+        }
         return response($request->auth);
     }
 
