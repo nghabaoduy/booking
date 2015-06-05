@@ -8,6 +8,7 @@ use App\Booking;
 use App\FoodOrder;
 use App\Http\Requests\GeneralRequest;
 use App\Http\Requests\CreateBookingRequest;
+use Carbon\Carbon;
 
 class BookingController extends Controller {
 
@@ -51,6 +52,16 @@ class BookingController extends Controller {
 	public function store(CreateBookingRequest $request)
 	{
 		//
+
+
+        $timeSlotDate = new Carbon($request->get('time_slot'));
+        $now = Carbon::now();
+
+        if ($now->diffInHours($timeSlotDate) == 0) {
+            return response(json_encode(['message' => 'booking time must be after '. $now->addHour(1)->toDateTimeString()]), 400);
+        }
+
+
 
         $data = [
             'is_confirmed' => 0,
@@ -131,6 +142,14 @@ class BookingController extends Controller {
         $data = Booking::with('foodOrders')->where('user_id', $request->auth->id)->where('id', $id)->first();
         if (!$data) {
             return response(json_encode(['message' => 'booking not found']), 404);
+        }
+
+        if (!boolval($data->is_rescheduled) && boolval($request->get('is_rescheduled'))) {
+            $timeSlotDate = new Carbon($request->get('time_slot'));
+            $now = Carbon::now();
+            if ($now->diffInHours($timeSlotDate) <= 0) {
+                return response(json_encode(['message' => 'reschedule time must be after '. $now->addHour(1)->toDateTimeString()]), 400);
+            }
         }
         $data->update($request->all());
         return response($data);
