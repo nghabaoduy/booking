@@ -2,6 +2,7 @@
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Davibennun\LaravelPushNotification\Facades\PushNotification;
 
 class Kernel extends ConsoleKernel {
 
@@ -24,6 +25,13 @@ class Kernel extends ConsoleKernel {
 	{
 		$schedule->command('inspire')
 				 ->hourly();
+
+        $schedule->call(function(){
+            //..
+            PushNotification::app('appNameIOS')
+            ->to('51518ed1a9dfb59fdc058375a8d249311a3e4e8357bf010ce47688eb1399c3b0')
+                ->send('Hello World, i`m a push message');
+        })->everyFiveMinutes();
 	}
 
 }

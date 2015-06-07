@@ -19,3 +19,10 @@ $router->get('/api/currentUser', 'Api\AuthController@getCurrentUser');
 $router->post('/api/register', 'Api\AuthController@postRegister');
 
 $router->resource('/api/booking', 'Api\BookingController');
+
+
+$router->get('/pushtest', function() {
+    \Davibennun\LaravelPushNotification\Facades\PushNotification::app('appNameIOS')
+        ->to('51518ed1a9dfb59fdc058375a8d249311a3e4e8357bf010ce47688eb1399c3b0')
+        ->send('Hello World, i`m a push message');
+});
