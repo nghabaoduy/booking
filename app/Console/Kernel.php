@@ -37,8 +37,6 @@ class Kernel extends ConsoleKernel {
 
 
             foreach ($data as $booking) {
-                dd($booking->user->installationList);
-
                 foreach ($booking->user->installationList as $installation) {
                     PushNotification::app('appNameIOS')
                         ->to($installation->token)
