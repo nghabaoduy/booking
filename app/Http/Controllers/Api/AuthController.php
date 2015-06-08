@@ -15,6 +15,8 @@ use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Booking;
 use Carbon\Carbon;
+use App\Installtion;
+use App\Http\Requests\InstallationRequest;
 
 class AuthController extends Controller {
 
@@ -96,6 +98,26 @@ class AuthController extends Controller {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+
+    public function installation(InstallationRequest $request)
+    {
+        $token = $request->get('token');
+        $installation = Installtion::with('user')->where('token', $token)->first();
+        if (!$installation) {
+            $installation = new Installtion();
+            $installation->token = $token;
+            $installation->user_id = $request->get('user_id');
+            $installation->save();
+        } else {
+            $installation->token = $token;
+            $installation->user_id = $request->get('user_id');
+            $installation->save();
+        }
+
+        $installation = Installtion::with('user')->where('token', $token)->first();
+        return $installation;
     }
 
 

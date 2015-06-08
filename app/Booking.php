@@ -13,4 +13,8 @@ class Booking extends Model {
         return $this->hasMany('App\FoodOrder', 'booking_id');
     }
 
+    public function user() {
+        return $this->belongsTo('App\User', 'user_id');
+    }
+
 }

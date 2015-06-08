@@ -4,6 +4,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Davibennun\LaravelPushNotification\Facades\PushNotification;
 use Carbon\Carbon;
+use App\Booking;
 
 class Kernel extends ConsoleKernel {
 
@@ -28,10 +29,23 @@ class Kernel extends ConsoleKernel {
 		//		 ->hourly();
 
         $schedule->call(function(){
-            //..
-            PushNotification::app('appNameIOS')
-            ->to('51518ed1a9dfb59fdc058375a8d249311a3e4e8357bf010ce47688eb1399c3b0')
-                ->send('Hello World, i`m a push message at '.Carbon::now()->toDateTimeString());
+
+            $data = Booking::with('foodOrders', 'user.installationList')
+                ->whereBetween('time_slot', [Carbon::now()->toDateTimeString(), Carbon::now()->addHour(1)->toDateTimeString()])
+                ->where('is_paid', false)
+                ->where('is_confirmed', false)->get();
+
+
+            foreach ($data as $booking) {
+                dd($booking->user->installationList);
+
+                foreach ($booking->user->installationList as $installation) {
+                    PushNotification::app('appNameIOS')
+                        ->to($installation->token)
+                        ->send('You have up coming booking at '.$booking->time_slot.'.Please check your booking list and confirm it');
+                }
+            }
+
         })->everyFiveMinutes();
 	}
 

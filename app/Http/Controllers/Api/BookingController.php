@@ -166,4 +166,26 @@ class BookingController extends Controller {
 		//
 	}
 
+
+    public function test() {
+
+        $installationList = [];
+        $data = Booking::with('foodOrders', 'user.installationList')
+            ->whereBetween('time_slot', [Carbon::now()->toDateTimeString(), Carbon::now()->addHour(1)->toDateTimeString()])
+            ->where('is_paid', false)
+            ->where('is_confirmed', false)->get();
+
+
+        foreach ($data as $booking) {
+            dd($booking->user->installationList);
+
+            foreach ($booking->user->installationList as $installation) {
+                array_push($installationList, $installation);
+            }
+        }
+
+        dd($installationList);
+        return response($data);
+    }
+
 }

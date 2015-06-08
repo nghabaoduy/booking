@@ -31,4 +31,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	protected $hidden = ['password', 'remember_token'];
 
+    public function installationList() {
+        return $this->hasMany('App\Installtion', 'user_id');
+    }
+
 }
