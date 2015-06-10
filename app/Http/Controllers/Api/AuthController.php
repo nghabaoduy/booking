@@ -48,7 +48,7 @@ class AuthController extends Controller {
 
         Mail::send('emails.forgotPassword', ['password' => $newPassword, 'phone' => $user->phone], function($message) use ($user)
         {
-            $message->to($user->email);
+            $message->to($user->email)->subject('Forgot Password!');
         });
         return response(json_encode(['message' => 'Sent email to '.$user->email]));
     }
