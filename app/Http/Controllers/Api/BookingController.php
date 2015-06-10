@@ -9,6 +9,7 @@ use App\FoodOrder;
 use App\Http\Requests\GeneralRequest;
 use App\Http\Requests\CreateBookingRequest;
 use Carbon\Carbon;
+use Davibennun\LaravelPushNotification\Facades\PushNotification;
 
 class BookingController extends Controller {
 
@@ -169,7 +170,6 @@ class BookingController extends Controller {
 
     public function test() {
 
-        $installationList = [];
         $data = Booking::with('foodOrders', 'user.installationList')
             ->whereBetween('time_slot', [Carbon::now()->toDateTimeString(), Carbon::now()->addHour(1)->toDateTimeString()])
             ->where('is_paid', false)
@@ -177,14 +177,12 @@ class BookingController extends Controller {
 
 
         foreach ($data as $booking) {
-            dd($booking->user->installationList);
-
             foreach ($booking->user->installationList as $installation) {
-                array_push($installationList, $installation);
+                PushNotification::app('appNameIOS')
+                    ->to($installation->token)
+                    ->send('You have up coming booking at '.$booking->time_slot.'.Please check your booking list and confirm it');
             }
         }
-
-        dd($installationList);
         return response($data);
     }
 

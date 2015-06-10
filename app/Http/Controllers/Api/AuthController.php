@@ -17,6 +17,7 @@ use App\Booking;
 use Carbon\Carbon;
 use App\Installtion;
 use App\Http\Requests\InstallationRequest;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller {
 
@@ -35,6 +36,20 @@ class AuthController extends Controller {
 
     public function postForgotPassword(ResetPasswordRequest $request) {
         $user = User::where('phone', $request->get('phone'))->first();
+        if (!$user) {
+            //error
+            return response(json_encode(['message' => 'user not found']), 404);
+        }
+
+        $newPassword = $this->generateRandomString(6);
+
+        $user->password = bcrypt($newPassword);
+        $user->update();
+
+        Mail::send('emails.forgotPassword', ['password' => $newPassword, 'phone' => $user->phone], function($message) use ($user)
+        {
+            $message->to($user->email);
+        });
         return response(json_encode(['message' => 'Sent email to '.$user->email]));
     }
 
