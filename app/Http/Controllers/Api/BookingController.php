@@ -87,7 +87,8 @@ class BookingController extends Controller {
                 'name' => $food['name'],
                 'quantity' => $food['quantity'],
                 'total_price' => $food['total_price'],
-                'code' => $food['code'],'type' => $food['type']
+                'code' => $food['code'],
+                //'type' => $food['type']
             ];
             FoodOrder::create($foodData);
         }
