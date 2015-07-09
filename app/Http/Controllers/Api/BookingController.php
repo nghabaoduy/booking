@@ -58,7 +58,7 @@ class BookingController extends Controller {
         $timeSlotDate = new Carbon($request->get('time_slot'));
         $now = Carbon::now();
 
-       
+
         if ($now->diffInHours($timeSlotDate) == 0) {
             return response(json_encode(['message' => 'booking time must be after '. $now->addHour(1)->toDateTimeString()]), 400);
         }
