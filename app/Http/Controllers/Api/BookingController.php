@@ -73,7 +73,8 @@ class BookingController extends Controller {
             'booking_ref' => $this->generateRandomString(10),
             'is_paid' => 0,
             'total_order' => $request->get('total_order'),
-            'type' => $request->get('type')
+            'type' => $request->get('type'),
+            'additional_info' => $request->get('additional_info'),
         ];
 
         $booking = Booking::create($data);
