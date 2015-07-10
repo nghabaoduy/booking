@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel {
 	 * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
 	 * @return void
 	 */
+    
 	protected function schedule(Schedule $schedule)
 	{
 		//$schedule->command('inspire')
@@ -31,7 +32,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function(){
 
             $data = Booking::with('foodOrders', 'user.installationList')
-                ->whereBetween('time_slot', [Carbon::now()->toDateTimeString(), Carbon::now()->addHour(1)->toDateTimeString()])
+                ->whereBetween('time_slot', [Carbon::now()->toDateTimeString(), Carbon::now()->addHour(0.5)->toDateTimeString()])
                 ->where('is_paid', false)
                 ->where('is_confirmed', false)->get();
 

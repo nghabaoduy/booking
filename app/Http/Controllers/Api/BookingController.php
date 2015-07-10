@@ -151,8 +151,8 @@ class BookingController extends Controller {
         if (!boolval($data->is_rescheduled) && boolval($request->get('is_rescheduled'))) {
             $timeSlotDate = new Carbon($request->get('time_slot'));
             $now = Carbon::now();
-            if ($now->diffInHours($timeSlotDate) <= 0) {
-                return response(json_encode(['message' => 'reschedule time must be after '. $now->addHour(1)->toDateTimeString()]), 400);
+            if ($now->diffInMinutes($timeSlotDate) <= 30) {
+                return response(json_encode(['message' => 'reschedule time must be after '. $now->addHour(0.5)->toDateTimeString()]), 400);
             }
         }
         $data->update($request->all());
