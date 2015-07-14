@@ -70,7 +70,7 @@ class BookingController extends Controller {
             'time_slot' => $request->get('time_slot'),
             'is_rescheduled' => 0,
             'user_id' => $request->auth->id,
-            'booking_ref' => $this->generateRandomString(10),
+            'booking_ref' => $this->generateRandomString(6),
             'is_paid' => 0,
             'total_order' => $request->get('total_order'),
             'type' => $request->get('type'),
@@ -98,7 +98,7 @@ class BookingController extends Controller {
 	}
 
     function generateRandomString($length = 10) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
